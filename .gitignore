@@ -1,0 +1,11 @@
+# Ignoring checkpoints
+checkpoints/
+
+# Ignoring all .pyc files
+*.pyc
+
+# Ignoring __pycache__ directories
+__pycache__/
+
+# Ignoring the tar.gz file
+*.tar.gz
