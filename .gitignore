@@ -7,5 +7,5 @@ checkpoints/
 # Ignoring __pycache__ directories
 __pycache__/
 
-# Ignoring the tar.gz file
-*.tar.gz
+/data/*
+!/data/.gitignore
