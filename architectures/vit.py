@@ -141,8 +141,7 @@ class ViT(nn.Module):
         num_patches = (image_height // patch_height) * (image_width // patch_width)
         patch_dim = channels * patch_height * patch_width
 
-        # Ensure the pooling strategy is valid
-        assert pool in {'cls', 'mean'}, 'pool type must be either cls (cls token) or mean (mean pooling)'
+
 
         # Define the patch embedding layer
         self.to_patch_embedding = nn.Sequential(
@@ -153,9 +152,14 @@ class ViT(nn.Module):
             nn.LayerNorm(dim)  # Normalize the embedding
         )
 
-        # Define positional embeddings and class token
-        self.pos_embedding = nn.Parameter(torch.randn(1, num_patches + 1, dim))  # Positional embeddings for patches and class token
+        # Ensure the pooling strategy is valid
+        assert pool in {'cls', 'mean'}, 'pool type must be either cls (cls token) or mean (mean pooling)'
+
+        # Define CLS token and positional embeddings
         self.cls_token = nn.Parameter(torch.randn(1, 1, dim))  # Learnable class token
+
+        self.pos_embedding = nn.Parameter(torch.randn(1, num_patches + 1, dim))  # Positional embeddings for patches and class token
+
         self.dropout = nn.Dropout(dropout)  # Dropout for regularization
 
         # Define the transformer encoder
@@ -180,7 +184,7 @@ class ViT(nn.Module):
             dict: A dictionary containing the class token, feature map, and classification result.
         """
         # Convert image to patch embeddings
-        x = self.to_patch_embedding(img)
+        x = self.to_patch_embedding(img) # Shape: (batch_size, num_patches, dim)
         b, n, _ = x.shape  # Get batch size, number of patches, and embedding dimension
         
         # Repeat class token for each image in the batch
@@ -196,18 +200,18 @@ class ViT(nn.Module):
         x = self.dropout(x)
 
         # Pass through transformer encoder
-        x = self.transformer(x)
-        
+        x = self.transformer(x) # Shape: (batch_size, num_patches + 1, dim)
+
         # Extract class token and feature map
         cls_token = x[:, 0]  # Extract class token
         feature_map = x[:, 1:]  # Remaining tokens are feature map
 
         # Apply pooling operation: 'cls' token or mean of patches
         pooled_output = cls_token if self.pool == 'cls' else feature_map.mean(dim=1)
-        
+
         # Apply the identity transformation (no change to the tensor)
         pooled_output = self.to_latent(pooled_output)
-        
+
         # Apply the classification head to the pooled output
         classification_result = self.mlp_head(pooled_output)
 
