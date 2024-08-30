@@ -1,75 +1,75 @@
+# training/train.py
+
 import torch
+import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import DataLoader
-from sklearn.metrics import accuracy_score
-import os
+from tqdm import tqdm
 
-class Trainer:
-    def __init__(self, model, train_dataset, val_dataset, batch_size=32, lr=1e-4, device=None):
-        self.model = model
-        self.train_dataset = train_dataset
-        self.val_dataset = val_dataset
-        self.batch_size = batch_size
-        self.lr = lr
-        self.device = device if device else torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+def train_one_epoch(model, loader, criterion, optimizer, device):
+    model.train()
+    total_loss = 0
+    correct = 0
+    total = 0
 
-        # Data loaders
-        self.train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
-        self.val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=4)
+    for batch in tqdm(loader, desc="Training"):
+        images, labels = batch
+        images, labels = images.to(device), labels.to(device)
 
-        # Move model to device
-        self.model.to(self.device)
+        optimizer.zero_grad()
+        outputs = model(images)['classification_head']
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
 
-        # Optimizer and loss function
-        self.optimizer = optim.Adam(self.model.parameters(), lr=lr)
-        self.criterion = nn.CrossEntropyLoss()
+        total_loss += loss.item()
+        _, predicted = outputs.max(1)
+        total += labels.size(0)
+        correct += predicted.eq(labels).sum().item()
 
-    def train(self, epochs):
-        self.model.train()
-        for epoch in range(epochs):
-            running_loss = 0.0
-            for batch in self.train_loader:
-                images, labels = batch
-                images, labels = images.to(self.device), labels.to(self.device)
+    return total_loss / len(loader), 100. * correct / total
 
-                self.optimizer.zero_grad()
+def validate(model, loader, criterion, device):
+    model.eval()
+    total_loss = 0
+    correct = 0
+    total = 0
 
-                outputs = self.model(images)['classification_head']
-                loss = self.criterion(outputs, labels)
-                loss.backward()
-                self.optimizer.step()
+    with torch.no_grad():
+        for batch in tqdm(loader, desc="Validating"):
+            images, labels = batch
+            images, labels = images.to(device), labels.to(device)
 
-                running_loss += loss.item() * images.size(0)
+            outputs = model(images)['classification_head']
+            loss = criterion(outputs, labels)
 
-            epoch_loss = running_loss / len(self.train_loader.dataset)
-            print(f"Epoch {epoch+1}/{epochs}, Loss: {epoch_loss:.4f}")
+            total_loss += loss.item()
+            _, predicted = outputs.max(1)
+            total += labels.size(0)
+            correct += predicted.eq(labels).sum().item()
 
-            # Evaluate after each epoch
-            self.evaluate()
+    return total_loss / len(loader), 100. * correct / total
 
-    def evaluate(self):
-        self.model.eval()
-        all_preds = []
-        all_labels = []
-        with torch.no_grad():
-            for batch in self.val_loader:
-                images, labels = batch
-                images, labels = images.to(self.device), labels.to(self.device)
+def train_vit(model, train_loader, val_loader, config):
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model = model.to(device)
 
-                outputs = self.model(images)['classification_head']
-                _, preds = torch.max(outputs, 1)
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.AdamW(model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay)
+    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=config.num_epochs)
 
-                all_preds.extend(preds.cpu().numpy())
-                all_labels.extend(labels.cpu().numpy())
+    best_val_acc = 0
 
-        accuracy = accuracy_score(all_labels, all_preds)
-        print(f"Validation Accuracy: {accuracy:.4f}")
+    for epoch in range(config.num_epochs):
+        train_loss, train_acc = train_one_epoch(model, train_loader, criterion, optimizer, device)
+        val_loss, val_acc = validate(model, val_loader, criterion, device)
+        scheduler.step()
 
-    def save(self, path):
-        torch.save(self.model.state_dict(), path)
-        print(f"Model saved to {path}")
+        print(f"Epoch {epoch+1}/{config.num_epochs}:")
+        print(f"Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.2f}%")
+        print(f"Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.2f}%")
 
-    def load(self, path):
-        self.model.load_state_dict(torch.load(path))
-        self.model.to(self.device)
-        print(f"Model loaded from {path}")
+        if val_acc > best_val_acc:
+            best_val_acc = val_acc
+            torch.save(model.state_dict(), 'best_vit_model.pth')
+
+    print(f"Best Validation Accuracy: {best_val_acc:.2f}%")
