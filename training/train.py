@@ -117,6 +117,17 @@ class Trainer:
         plt.savefig('training_results.png')
         plt.close()
 
-def train_vit(model, train_loader, val_loader, args):
-    trainer = Trainer(model, train_loader, val_loader, args)
-    trainer.train()
+def get_trainer(model, train_loader, val_loader, args):
+    """
+    Create and return a Trainer instance.
+    
+    Args:
+        model: The model to train
+        train_loader: DataLoader for the training set
+        val_loader: DataLoader for the validation set
+        args: Arguments containing training parameters
+    
+    Returns:
+        A Trainer instance
+    """
+    return Trainer(model, train_loader, val_loader, args)

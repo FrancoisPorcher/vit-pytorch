@@ -3,8 +3,8 @@
 import argparse
 import json
 from architectures.vit import ViT
-from data.imagenet_dataloader import get_imagenet_loaders
-from training.train import train_vit
+from dataloader.food101_dataloader import get_food101_dataloader
+from training.train import get_trainer
 from utils.config_utils import save_config
 
 def parse_args():
@@ -28,7 +28,6 @@ def parse_args():
     parser.add_argument("--weight_decay", type=float, default=0.1, help="Weight decay")
 
     # Data parameters
-    parser.add_argument("--data_dir", type=str, required=True, help="Path to ImageNet dataset")
     parser.add_argument("--num_workers", type=int, default=4, help="Number of data loading workers")
 
     # Other parameters
@@ -53,13 +52,16 @@ def main():
     )
 
     # Get data loaders
-    train_loader, val_loader = get_imagenet_loaders(args)
+    train_loader, val_loader = get_food101_dataloader(batch_size = args.batch_size, num_workers = args.num_workers)
 
-    # Train the model
-    train_vit(model, train_loader, val_loader, args)
+    # Get the Trainer
+    trainer = get_trainer(model, train_loader, val_loader, args)
+
+    # Start training
+    trainer.train()
 
     # Save the configuration
-    save_config(vars(args), args.config_output)
+    # save_config(vars(args), args.config_output)
 
 if __name__ == "__main__":
     main()

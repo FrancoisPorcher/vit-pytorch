@@ -46,7 +46,6 @@ Here's an example configuration you might use:
 
 ```bash
 python main.py \
-    --data_dir /path/to/imagenet/ \
     --image_size 224 \
     --patch_size 16 \
     --num_classes 1000 \
