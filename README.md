@@ -48,11 +48,11 @@ Here's an example configuration you might use:
 python main.py \
     --image_size 224 \
     --patch_size 16 \
-    --num_classes 1000 \
+    --num_classes 101 \
     --dim 768 \
     --depth 12 \
     --heads 12 \
-    --mlp_dim 3072 \
+    --mlp_dim_ratio 4 \
     --batch_size 64 \
     --num_epochs 100 \
     --learning_rate 3e-4 \

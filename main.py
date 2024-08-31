@@ -4,7 +4,7 @@ import argparse
 import json
 from architectures.vit import ViT
 from dataloader.food101_dataloader import get_food101_dataloader
-from training.train import get_trainer
+from training.train import Trainer
 from utils.config_utils import save_config
 
 def parse_args():
@@ -17,7 +17,7 @@ def parse_args():
     parser.add_argument("--dim", type=int, default=768, help="Embedding dimension")
     parser.add_argument("--depth", type=int, default=12, help="Number of transformer layers")
     parser.add_argument("--heads", type=int, default=12, help="Number of attention heads")
-    parser.add_argument("--mlp_dim", type=int, default=3072, help="MLP dimension")
+    parser.add_argument("--mlp_dim_ratio", type=int, default=4, help="MLP dimension")
     parser.add_argument("--channels", type=int, default=3, help="Number of input channels")
     parser.add_argument("--dropout", type=float, default=0.1, help="Dropout rate")
 
@@ -46,7 +46,7 @@ def main():
         dim=args.dim,
         depth=args.depth,
         heads=args.heads,
-        mlp_dim=args.mlp_dim,
+        mlp_dim_ratio=args.mlp_dim_ratio,
         channels=args.channels,
         dropout=args.dropout
     )
@@ -55,7 +55,7 @@ def main():
     train_loader, val_loader = get_food101_dataloader(batch_size = args.batch_size, num_workers = args.num_workers)
 
     # Get the Trainer
-    trainer = get_trainer(model, train_loader, val_loader, args)
+    trainer = Trainer(model, train_loader, val_loader, args)
 
     # Start training
     trainer.train()

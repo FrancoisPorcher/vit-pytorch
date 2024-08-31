@@ -81,10 +81,11 @@ class Attention(nn.Module):
         return out  # Return the final output tensor
     
 class Transformer(nn.Module):
-    def __init__(self, dim, depth, heads, dim_head, mlp_dim, dropout):
+    def __init__(self, dim, depth, heads, dim_head, mlp_dim_ratio, dropout):
         super().__init__()
         self.norm = nn.LayerNorm(dim)
         self.layers = nn.ModuleList([])
+        mlp_dim = mlp_dim_ratio * dim
         for _ in range(depth):
             self.layers.append(nn.ModuleList([
                 Attention(dim=dim, heads=heads, dim_head=dim_head, dropout=dropout),
@@ -111,7 +112,7 @@ def pair(t):
     return t if isinstance(t, tuple) else (t, t)
     
 class ViT(nn.Module):
-    def __init__(self, *, image_size, patch_size, num_classes, dim, depth, heads, mlp_dim, pool='cls', channels=3, dim_head=64, dropout=0.):
+    def __init__(self, *, image_size, patch_size, num_classes, dim, depth, heads, mlp_dim_ratio, pool='cls', channels=3, dim_head=64, dropout=0.):
         """
         Initializes a Vision Transformer (ViT) model.
         
@@ -163,7 +164,7 @@ class ViT(nn.Module):
         self.dropout = nn.Dropout(dropout)  # Dropout for regularization
 
         # Define the transformer encoder
-        self.transformer = Transformer(dim, depth, heads, dim_head, mlp_dim, dropout)
+        self.transformer = Transformer(dim, depth, heads, dim_head, mlp_dim_ratio, dropout)
 
         # Pooling strategy ('cls' token or mean of patches)
         self.pool = pool
