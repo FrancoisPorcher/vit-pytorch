@@ -220,5 +220,5 @@ class ViT(nn.Module):
         return {
             'cls_token': cls_token,  # Class token
             'feature_map': feature_map,  # Feature map (patch embeddings)
-            'classification_head': classification_result  # Final classification result
+            'classification_head_logits': classification_result  # Final classification result
         }
