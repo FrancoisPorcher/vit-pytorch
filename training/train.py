@@ -8,12 +8,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class Trainer:
-    def __init__(self, model, train_loader, val_loader, args):
+    def __init__(self, model, train_loader, val_loader, device, args):
         self.model = model
         self.train_loader = train_loader
         self.val_loader = val_loader
         self.args = args
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = device
         self.model.to(self.device)
 
         self.criterion = nn.CrossEntropyLoss()

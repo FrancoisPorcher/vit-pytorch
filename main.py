@@ -5,7 +5,7 @@ import json
 from architectures.vit import ViT
 from dataloader.food101_dataloader import get_food101_dataloader
 from training.train import Trainer
-from utils.config_utils import save_config
+from utils.config_utils import save_config, get_device
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Train a Vision Transformer on ImageNet")
@@ -38,6 +38,9 @@ def parse_args():
 def main():
     args = parse_args()
 
+    device = get_device()
+    print(f"Using device: {device}")
+
     # Initialize the model
     model = ViT(
         image_size=args.image_size,
@@ -55,7 +58,7 @@ def main():
     train_loader, val_loader = get_food101_dataloader(batch_size = args.batch_size, num_workers = args.num_workers)
 
     # Get the Trainer
-    trainer = Trainer(model, train_loader, val_loader, args)
+    trainer = Trainer(model = model, train_loader = train_loader, val_loader = val_loader, device = device, args = args)
 
     # Start training
     trainer.train()
