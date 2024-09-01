@@ -7,6 +7,10 @@ from dataloader.food101_dataloader import get_food101_dataloader
 from training.train import Trainer
 from utils.config_utils import save_config, get_device
 
+# DAWN and DELL optimization
+import intel_extension_for_pytorch as ipex
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Train a Vision Transformer on ImageNet")
     
@@ -53,6 +57,8 @@ def main():
         channels=args.channels,
         dropout=args.dropout
     )
+
+    model = model.to(device)
 
     # Get data loaders
     train_loader, val_loader = get_food101_dataloader(batch_size = args.batch_size, num_workers = args.num_workers)

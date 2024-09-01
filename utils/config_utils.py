@@ -31,9 +31,6 @@ def get_device():
     if torch.backends.mps.is_available():
         return torch.device('mps')
 
-    # Check for XPU (Intel GPU) availability
-    if torch.xpu.is_available():
-        return torch.device('xpu')
 
     # Default to CPU if no other device is available
-    return torch.device('cpu')
+    return 'xpu'

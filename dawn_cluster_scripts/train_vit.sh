@@ -21,8 +21,8 @@
 #SBATCH --gres=gpu:1        # Number of GPUs per node (1 GPU requested)
 
 # Output and error files:
-#SBATCH --output=/home/fp427/rds/hpc-work/logs/train_vit_%j.out    # Standard output log
-#SBATCH --error=/home/fp427/rds/hpc-work/logs/train_vit_%j.err     # Standard error log
+#SBATCH --output=/home/fp427/rds/hpc-work/vit-pytorch/logs/train_vit_%j.out    # Standard output log
+#SBATCH --error=/home/fp427/rds/hpc-work/vit-pytorch/logs/train_vit_%j.err     # Standard error log
 
 # Purge all loaded modules and load the base environment for Dawn:
 module purge
