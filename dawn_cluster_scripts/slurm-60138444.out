@@ -1,0 +1,5 @@
+Loading default-dawn
+  Loading requirement: dawn-env/2023-12-22 dawn-env/2024-04-15 dot rhel8/global
+    rhel8/slurm
+Python 3.9.18 :: Intel Corporation
+ /home/fp427/rds/hpc-work/vit-pytorch
