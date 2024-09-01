@@ -1,5 +1,5 @@
 # training/train.py
-
+import os
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -92,6 +92,21 @@ class Trainer:
 
         print(f"Best Validation Accuracy: {best_val_acc:.2f}%")
         self.plot_results()
+
+        # Save final checkpoint after training completes
+        self.save_checkpoint(epoch+1, best_val_acc)
+        
+    def save_checkpoint(self, epoch, best_val_acc):
+        """Saves the model checkpoint at the end of training."""
+        checkpoint_path = os.path.join('checkpoints', f'vit_checkpoint_epoch_{epoch}.pth')
+        os.makedirs(os.path.dirname(checkpoint_path), exist_ok=True)
+        torch.save({
+            'epoch': epoch,
+            'model_state_dict': self.model.state_dict(),
+            'optimizer_state_dict': self.optimizer.state_dict(),
+            'best_val_acc': best_val_acc
+        }, checkpoint_path)
+        print(f"Checkpoint saved at '{checkpoint_path}'")
 
     def plot_results(self):
         epochs = range(1, self.args.num_epochs + 1)

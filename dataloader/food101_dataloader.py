@@ -51,7 +51,7 @@ class Food101Dataset(Dataset):
     
     def __getitem__(self, idx):
         item = self.dataset[idx]
-        image = item['image']
+        image = item['image'].convert("RGB")  # Ensure image is in RGB format
         label = item['label']
         
         # Apply the transform if provided
