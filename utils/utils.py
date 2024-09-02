@@ -25,12 +25,15 @@ def get_device():
     
     # Check for CUDA (GPU) availability
     if torch.cuda.is_available():
+        print("CUDA is available. Using GPU.")
         return torch.device('cuda')
 
     # Check for MPS (Metal Performance Shaders) availability for Apple devices
     if torch.backends.mps.is_available():
+        print("MPS is available. Using MPS.")
         return torch.device('mps')
 
 
     # Default to CPU if no other device is available
+    print("Using XPU.")
     return 'xpu'
