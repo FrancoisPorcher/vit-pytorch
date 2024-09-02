@@ -64,7 +64,7 @@ class Food101Dataset(Dataset):
         
         return image, label_idx
 
-def get_food101_dataloader(batch_size=32, num_workers=4):
+def get_food101_dataloader(batch_size=32, num_workers=0):
     """
     Load the Food101 dataset and return the train and validation dataloaders.
 

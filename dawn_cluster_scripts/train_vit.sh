@@ -24,6 +24,8 @@
 #SBATCH --output=/home/fp427/rds/hpc-work/vit-pytorch/logs/train_vit_%j.out    # Standard output log
 #SBATCH --error=/home/fp427/rds/hpc-work/vit-pytorch/logs/train_vit_%j.err     # Standard error log
 
+#SBATCH --time=12:00:00     # Set a time limit of 12 hours
+
 # Purge all loaded modules and load the base environment for Dawn:
 module purge
 module load default-dawn

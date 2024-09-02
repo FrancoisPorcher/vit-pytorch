@@ -58,13 +58,26 @@ def main():
         dropout=args.dropout
     )
 
+    print("model loaded")
+
     model = model.to(device)
+    print("model moved to device")
+
+    if device == "xpu":
+        model = ipex.optimize(model, dtype=torch.float32)
+        print("model optimized")
+
+    
 
     # Get data loaders
     train_loader, val_loader = get_food101_dataloader(batch_size = args.batch_size, num_workers = args.num_workers)
 
+    print("dataloaders loaded")
+
     # Get the Trainer
     trainer = Trainer(model = model, train_loader = train_loader, val_loader = val_loader, device = device, args = args)
+
+    print("trainer loaded")
 
     # Start training
     trainer.train()
