@@ -48,7 +48,7 @@ srun python main.py \
     --num_classes 101 \
     --dim 768 \
     --depth 12 \
-    --heads 12 \
+    --heads 8 \
     --mlp_dim_ratio 4 \
     --batch_size 64 \
     --num_epochs 100 \

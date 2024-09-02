@@ -25,6 +25,10 @@ class Trainer:
         self.val_losses = []
         self.val_accuracies = []
 
+        if device == "xpu":
+            self.model, self.optimizer = ipex.optimize(model=self.model, optimizer = self.optimizer, dtype=torch.float32)
+            print("model and optimizer correctly optimized with ipex")  
+
     def train_one_epoch(self):
         self.model.train()
         total_loss = 0

@@ -5,9 +5,10 @@ import json
 from architectures.vit import ViT
 from dataloader.food101_dataloader import get_food101_dataloader
 from training.train import Trainer
-from utils.config_utils import save_config, get_device
+from utils.utils import save_config, get_device
 
 # DAWN and DELL optimization
+import torch
 import intel_extension_for_pytorch as ipex
 
 
@@ -58,16 +59,10 @@ def main():
         dropout=args.dropout
     )
 
-    print("model loaded")
 
     model = model.to(device)
     print("model moved to device")
 
-    if device == "xpu":
-        model = ipex.optimize(model, dtype=torch.float32)
-        print("model optimized")
-
-    
 
     # Get data loaders
     train_loader, val_loader = get_food101_dataloader(batch_size = args.batch_size, num_workers = args.num_workers)
@@ -79,11 +74,16 @@ def main():
 
     print("trainer loaded")
 
+    # Save the configuration
+    config = vars(args)
+    config_filename = f"configs/{args.config_output}"  # Save to the configs folder
+    save_config(config, config_filename)
+
+    print("configuration saved")
+
     # Start training
     trainer.train()
 
-    # Save the configuration
-    # save_config(vars(args), args.config_output)
 
 if __name__ == "__main__":
     main()
