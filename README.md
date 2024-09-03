@@ -56,22 +56,6 @@ python main.py \
     --dropout 0.1
 ```
 
-## Features
-
-- Modular implementation of Vision Transformer
-- Flexible training pipeline with customizable hyperparameters
-- Automatic logging of training and validation metrics
-- Visualization of training progress (loss and accuracy curves)
-- Saves the best model based on validation accuracy
-- Saves configuration for reproducibility
-
-## Requirements
-
-- PyTorch
-- torchvision
-- tqdm
-- matplotlib
-- numpy
 
 ## Notes
 
