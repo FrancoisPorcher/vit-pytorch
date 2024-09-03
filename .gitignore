@@ -1,3 +1,7 @@
 checkpoints/
 logs/
 *.pth
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
