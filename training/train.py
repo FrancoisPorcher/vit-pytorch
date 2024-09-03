@@ -6,6 +6,7 @@ import torch.optim as optim
 from tqdm import tqdm
 import numpy as np
 import matplotlib.pyplot as plt
+import intel_extension_for_pytorch as ipex
 
 class Trainer:
     def __init__(self, model, train_loader, val_loader, device, args):

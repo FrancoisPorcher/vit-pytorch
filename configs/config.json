@@ -1,0 +1,17 @@
+{
+    "image_size": 224,
+    "patch_size": 16,
+    "num_classes": 101,
+    "dim": 768,
+    "depth": 12,
+    "heads": 8,
+    "mlp_dim_ratio": 4,
+    "channels": 3,
+    "dropout": 0.1,
+    "batch_size": 64,
+    "num_epochs": 100,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.1,
+    "num_workers": 4,
+    "config_output": "config.json"
+}

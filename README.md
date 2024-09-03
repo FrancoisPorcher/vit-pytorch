@@ -4,45 +4,41 @@ This is a PyTorch implementation of the Vision Transformer (ViT) model in the pa
 
 # How to use?
 
-Create a new conda environment called `vit` from the `environment.yml` file:
+Create a new conda environment with `Pytorch`, `torchvision`, `tqdm`, and `einops` installed.
 
-```bash
-conda env create -f environment.yml
-```
 
-# Vision Transformer (ViT) Training on ImageNet
-
-This repository contains code for training a Vision Transformer (ViT) model on the ImageNet dataset. It provides a flexible and modular implementation that allows for easy experimentation with different hyperparameters and model configurations.
 
 ## Repository Structure
 
+```bash
+├── architectures
+│   └── vit.py
+├── best_vit_model.pth
+├── checkpoints
+├── configs
+│   └── config.json
+├── dataloader
+│   └── food101_dataloader.py
+├── dawn_cluster_scripts
+│   └── train_vit.sh
+├── logs
+├── main.py
+├── README.md
+├── training
+│   └── train.py
+└── utils
+    └── utils.py
 ```
-vit-pytorch/
-├── architectures/
-│   └── vit.py              # ViT model implementation
-├── data/
-│   └── imagenet_dataloader.py  # DataLoader for ImageNet
-├── training/
-│   └── train.py            # Trainer class and training logic
-├── utils/
-│   └── config_utils.py     # Utility functions for saving configs
-├── main.py                 # Main script to run training
-└── README.md               # This file
-```
+
+## Training the ViT on Food101 dataset (Image Classification)
+
+The dataset we are using is the Food101 dataset. It is a dataset of 101 food categories. For more information on the dataset, please refer to the following link:
+
+https://huggingface.co/datasets/ethz/food101
 
 ## Usage
 
 To train the ViT model, use the following command:
-
-```bash
-python main.py --data_dir /path/to/imagenet/ --batch_size 64 --num_epochs 100 --learning_rate 3e-4 --weight_decay 0.1
-```
-
-This command will start training with the specified parameters. You can adjust the hyperparameters as needed.
-
-## Example Configuration
-
-Here's an example configuration you might use:
 
 ```bash
 python main.py \
