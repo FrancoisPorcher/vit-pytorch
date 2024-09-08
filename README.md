@@ -63,7 +63,7 @@ python main.py \
 - The code automatically uses GPU if available, otherwise falls back to CPU.
 - Training progress is displayed in real-time, and a plot of training/validation loss and accuracy is saved at the end.
 - The best model (based on validation accuracy) is saved as 'best_vit_model.pth'.
-- The configuration used for training is saved as 'config.json' for future reference.
+- The configuration used for training is saved as 'config.json'.
 
 ## Contributing
 
