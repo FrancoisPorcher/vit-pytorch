@@ -1,0 +1,39 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: main.py with Arguments",
+            "type": "python",  // Corrected from "debugpy" to "python" for consistency
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",  // Ensure this path points to main.py
+            "console": "integratedTerminal",
+            "args": [
+                "--image_size", "224",
+                "--patch_size", "16",
+                "--num_classes", "101",
+                "--dim", "768",
+                "--depth", "12",
+                "--heads", "12",
+                "--mlp_dim_ratio", "4",
+                "--batch_size", "64",
+                "--num_epochs", "100",
+                "--learning_rate", "3e-4",
+                "--weight_decay", "0.1",
+                "--dropout", "0.1"
+            ],
+            "cwd": "${workspaceFolder}",  // Set the current working directory to the workspace folder
+            "env": {},  // Add any environment variables if needed
+            "justMyCode": true
+        },
+        {
+            "name": "Python Debugger: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        }
+    ]
+}
