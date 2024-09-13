@@ -81,7 +81,7 @@ class Attention(nn.Module):
         return out  # Return the final output tensor
     
 class Transformer(nn.Module):
-    def __init__(self, dim, depth, heads, dim_head, mlp_dim_ratio, dropout):
+    def __init__(self, dim, depth, heads, dim_head, mlp_dim_ratio, dropout = 0.):
         super().__init__()
         self.norm = nn.LayerNorm(dim)
         self.layers = nn.ModuleList([])
@@ -141,7 +141,6 @@ class ViT(nn.Module):
         # Calculate the number of patches and the dimension of each patch
         num_patches = (image_height // patch_height) * (image_width // patch_width)
         patch_dim = channels * patch_height * patch_width
-
 
 
         # Define the patch embedding layer
